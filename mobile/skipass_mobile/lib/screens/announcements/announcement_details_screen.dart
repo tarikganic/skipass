@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../core/config/app_config.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/dimens.dart';
 import '../../core/utils/formatters.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/announcement.dart';
 import '../../widgets/app_card.dart';
+import '../../widgets/app_network_image.dart';
 import '../../widgets/status_chip.dart';
 
 /// Puni tekst obavijesti sa slikom i datumom objave.
@@ -19,7 +19,6 @@ class AnnouncementDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context)!;
-    final imageUrl = AppConfig.resolveImageUrl(announcement.imageUrl);
 
     return Scaffold(
       appBar: AppBar(title: Text(t.announcementDetailsAppBarTitle)),
@@ -63,19 +62,14 @@ class AnnouncementDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xl),
 
-          if (imageUrl.isNotEmpty) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              child: Image.network(
-                imageUrl,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => const SizedBox.shrink(),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xl),
-          ],
+          AppNetworkImage(
+            imageUrl: announcement.imageUrl,
+            seed: announcement.title,
+            width: double.infinity,
+            height: 200,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+          const SizedBox(height: AppSpacing.xl),
 
           Text(announcement.content, style: theme.textTheme.bodyLarge),
           const SizedBox(height: AppSpacing.xxl),

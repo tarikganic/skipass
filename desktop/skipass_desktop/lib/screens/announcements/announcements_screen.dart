@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/config/app_config.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/dimens.dart';
 import '../../core/utils/formatters.dart';
@@ -13,6 +12,7 @@ import '../../services/engagement_service.dart';
 import '../../services/reference_data_service.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_feedback.dart';
+import '../../widgets/app_network_image.dart';
 import '../../widgets/state_views.dart';
 import 'announcement_form_dialog.dart';
 
@@ -201,7 +201,6 @@ class _AnnouncementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final resolved = AppConfig.resolveImageUrl(announcement.imageUrl);
     final accent = announcement.isUrgent ? AppColors.danger : AppColors.primary;
 
     return Padding(
@@ -213,11 +212,13 @@ class _AnnouncementCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (resolved.isNotEmpty)
-              ClipRRect(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppRadius.lg), bottomLeft: Radius.circular(AppRadius.lg)),
-                child: Image.network(resolved, width: 96, height: 96, fit: BoxFit.cover, errorBuilder: (_, _, _) => const SizedBox(width: 96, height: 96)),
-              ),
+            AppNetworkImage(
+              imageUrl: announcement.imageUrl,
+              seed: announcement.title,
+              width: 96,
+              height: 96,
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppRadius.lg), bottomLeft: Radius.circular(AppRadius.lg)),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),

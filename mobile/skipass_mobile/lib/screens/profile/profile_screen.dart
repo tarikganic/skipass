@@ -11,6 +11,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_feedback.dart';
+import '../../widgets/app_network_image.dart';
 import '../../widgets/state_views.dart';
 import '../announcements/announcements_screen.dart';
 import '../benefits/my_benefits_screen.dart';
@@ -225,7 +226,7 @@ class _ProfileHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              _Avatar(imageUrl: imageUrl, initials: user.initials),
+              _Avatar(imageUrl: imageUrl, initials: user.initials, seed: user.fullName),
               const SizedBox(width: AppSpacing.lg),
               Expanded(
                 child: Column(
@@ -284,22 +285,30 @@ class _ProfileHeader extends StatelessWidget {
   }
 }
 
-class _Avatar extends StatelessWidget {
-  const _Avatar({required this.imageUrl, required this.initials});
+class _Avatar extends StatefulWidget {
+  const _Avatar({required this.imageUrl, required this.initials, required this.seed});
 
   final String imageUrl;
   final String initials;
+  final String seed;
+
+  @override
+  State<_Avatar> createState() => _AvatarState();
+}
+
+class _AvatarState extends State<_Avatar> {
+  bool _loadFailed = false;
 
   @override
   Widget build(BuildContext context) {
-    if (imageUrl.isEmpty) {
+    if (widget.imageUrl.isEmpty || _loadFailed) {
       return CircleAvatar(
         radius: AppSizes.avatar / 2,
-        backgroundColor: AppColors.primarySurface,
+        backgroundColor: PlaceholderColors.colorFor(widget.seed).withValues(alpha: 0.18),
         child: Text(
-          initials,
-          style: const TextStyle(
-            color: AppColors.primaryDark,
+          widget.initials,
+          style: TextStyle(
+            color: PlaceholderColors.colorFor(widget.seed),
             fontWeight: FontWeight.w700,
             fontSize: 20,
           ),
@@ -310,8 +319,8 @@ class _Avatar extends StatelessWidget {
     return CircleAvatar(
       radius: AppSizes.avatar / 2,
       backgroundColor: AppColors.primarySurface,
-      backgroundImage: NetworkImage(imageUrl),
-      onBackgroundImageError: (_, _) {},
+      backgroundImage: NetworkImage(widget.imageUrl),
+      onBackgroundImageError: (_, _) => setState(() => _loadFailed = true),
     );
   }
 }

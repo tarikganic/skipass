@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/config/app_config.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/dimens.dart';
 import '../../l10n/app_localizations.dart';
@@ -13,6 +12,7 @@ import '../../services/reference_data_service.dart';
 import '../../services/resort_service.dart';
 import '../../widgets/app_card.dart';
 import '../../widgets/app_feedback.dart';
+import '../../widgets/app_network_image.dart';
 import '../../widgets/list_scaffold.dart';
 import '../../widgets/status_chip.dart';
 import 'lift_maintenance_dialog.dart';
@@ -195,7 +195,6 @@ class _TrailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final resolved = AppConfig.resolveImageUrl(trail.imageUrl);
     final difficultyColor = AppColors.fromHex(trail.difficultyColorHex);
 
     return AppCard(
@@ -205,25 +204,12 @@ class _TrailCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(
+              AppNetworkImage(
+                imageUrl: trail.imageUrl,
+                seed: trail.name,
+                height: AppSizes.cardImageHeight,
+                width: double.infinity,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-                child: resolved.isEmpty
-                    ? Container(
-                        height: AppSizes.cardImageHeight,
-                        color: theme.colorScheme.surfaceContainerHighest,
-                        child: const Icon(Icons.image_outlined, size: 32),
-                      )
-                    : Image.network(
-                        resolved,
-                        height: AppSizes.cardImageHeight,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => Container(
-                          height: AppSizes.cardImageHeight,
-                          color: theme.colorScheme.surfaceContainerHighest,
-                          child: const Icon(Icons.broken_image_outlined, size: 32),
-                        ),
-                      ),
               ),
               Positioned(
                 top: AppSpacing.sm,
