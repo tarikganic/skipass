@@ -147,9 +147,27 @@ public class PaymentService : IPaymentService
 
         if (existing is not null)
         {
-            throw new BusinessException(existing.Status == PaymentStatus.Completed
-                ? "Narudzba je vec placena."
-                : "Za ovu narudzbu vec postoji zapoceto placanje. Zavrsite ga ili sacekajte da istekne.");
+            if (existing.Status == PaymentStatus.Completed)
+            {
+                throw new BusinessException("Narudzba je vec placena.");
+            }
+
+            // Ranije zapoceto online placanje moze ostati "Pending" a da nikad ne stigne webhook
+            // (npr. korisnik je zatvorio Stripe formu bez unosa kartice) - u tom slucaju se stanje
+            // provjerava direktno kod Stripe-a i placanje se ponovo koristi ili oslobadja umjesto
+            // da trajno blokira narudzbu.
+            if (existing.TransactionId is { } existingIntentId && existingIntentId.StartsWith("pi_", StringComparison.Ordinal))
+            {
+                var reused = await TryReuseStripePaymentIntentAsync(existing, existingIntentId, cancellationToken);
+                if (reused is not null)
+                {
+                    return reused;
+                }
+            }
+            else
+            {
+                throw new BusinessException("Za ovu narudzbu vec postoji zapoceto placanje. Zavrsite ga ili sacekajte da istekne.");
+            }
         }
 
         var paymentMethod = await _context.PaymentMethods
@@ -225,6 +243,61 @@ public class PaymentService : IPaymentService
         {
             _logger.LogError(ex, "Otvaranje Stripe PaymentIntent-a za placanje {PaymentId} nije uspjelo.", payment.Id);
             throw new BusinessException($"Placanje trenutno nije moguce pokrenuti: {ex.StripeError?.Message ?? ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Provjerava kod Stripe-a stvarno stanje PaymentIntent-a vezanog za postojece "Pending"
+    /// placanje. Ako je intent i dalje otvoren, vraca isto placanje sa svjezim client secret-om
+    /// (isti PaymentIntent, ne novi) da korisnik moze ponovo pokusati; ako je uspio u medjuvremenu,
+    /// finalizira ga; ako vise nije upotrebljiv, oznacava ga kao neuspjesan i vraca null da pozivalac
+    /// otvori novi PaymentIntent.
+    /// </summary>
+    private async Task<PaymentDto?> TryReuseStripePaymentIntentAsync(Payment existingPayment, string intentId, CancellationToken cancellationToken)
+    {
+        var client = CreateStripeClient();
+        var service = new PaymentIntentService(client);
+
+        PaymentIntent intent;
+        try
+        {
+            intent = await service.GetAsync(intentId, cancellationToken: cancellationToken);
+        }
+        catch (StripeException ex)
+        {
+            _logger.LogError(ex, "Provjera statusa Stripe PaymentIntent-a {IntentId} nije uspjela.", intentId);
+            throw new BusinessException("Provjera prethodnog placanja trenutno nije moguca. Pokusajte ponovo za koji trenutak.");
+        }
+
+        switch (intent.Status)
+        {
+            case "succeeded":
+                // CompletePaymentAsync aktivira karte preko payment.SkiPassOrder.Tickets, koje ovdje
+                // jos nije ucitano (InitiateAsync ukljucuje samo Payments) - zato se placanje ponovo
+                // dohvata sa punim grafom prije finalizacije.
+                var toComplete = await _context.Payments
+                    .Include(p => p.SkiPassOrder)
+                        .ThenInclude(o => o.Tickets.Where(t => !t.IsDeleted))
+                    .FirstAsync(p => p.Id == existingPayment.Id, cancellationToken);
+                await CompletePaymentAsync(toComplete, intentId, cancellationToken);
+                return await GetByIdAsync(existingPayment.Id, cancellationToken);
+
+            case "requires_payment_method":
+            case "requires_confirmation":
+            case "requires_action":
+                var dto = await GetByIdAsync(existingPayment.Id, cancellationToken);
+                dto.StripeClientSecret = intent.ClientSecret;
+                dto.StripePublishableKey = _configuration["Stripe:PublishableKey"];
+                return dto;
+
+            case "processing":
+                throw new BusinessException("Prethodno placanje se jos obradjuje kod banke. Sacekajte potvrdu prije novog pokusaja.");
+
+            default:
+                existingPayment.Status = PaymentStatus.Failed;
+                existingPayment.FailureReason = $"Stripe PaymentIntent status: {intent.Status}.";
+                await _context.SaveChangesAsync(cancellationToken);
+                return null;
         }
     }
 
