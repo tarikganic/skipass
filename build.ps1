@@ -6,22 +6,32 @@ param(
     [ValidateSet('debug', 'release')]
     [string]$Mode = 'debug',
 
-    [ValidateSet('windows', 'chrome')]
+    [ValidateSet('windows', 'chrome', 'android')]
     [string]$Device,
 
     [switch]$Run,
 
-    [string]$ApiUrl = 'http://localhost:5000'
+    [string]$ApiUrl
 )
+
+if (-not $ApiUrl) {
+    # Android emulator ne vidi host kao 'localhost' - 10.0.2.2 je alias za host masinu.
+    $ApiUrl = if ($Device -eq 'android') { 'http://10.0.2.2:5000' } else { 'http://localhost:5000' }
+}
 
 $ErrorActionPreference = 'Continue'
 
-$flutterBin = 'C:\Users\Tarik\Desktop\flutter\bin'
+$flutterBin = 'C:\flutter\bin'
 if (-not (Test-Path (Join-Path $flutterBin 'flutter.bat'))) {
     throw "Flutter SDK nije pronaden na: $flutterBin"
 }
 if ($env:Path -notlike "*$flutterBin*") {
     $env:Path = "$env:Path;$flutterBin"
+}
+
+$platformTools = 'C:\Users\Tarik\AppData\Local\Android\sdk\platform-tools'
+if ((Test-Path $platformTools) -and ($env:Path -notlike "*$platformTools*")) {
+    $env:Path = "$env:Path;$platformTools"
 }
 
 $root = $PSScriptRoot
@@ -81,14 +91,25 @@ if ($App -eq 'desktop' -and (Test-Path $symlinks)) {
 
 $defines = @("--dart-define=API_BASE_URL=$ApiUrl")
 
+$targetDevice = $Device
+if ($Device -eq 'android') {
+    $adbLine = & adb devices 2>$null | Select-String '^emulator-\d+\s+device$' | Select-Object -First 1
+    if (-not $adbLine) { throw 'Nijedan Android emulator nije pokrenut (adb devices ne prijavljuje emulator-*).' }
+    $targetDevice = ($adbLine -split '\s+')[0]
+}
+
 if ($Run) {
     Write-Host '[4/4] flutter run...' -ForegroundColor Yellow
-    $runArgs = @('run', '-d', $Device, "--$Mode") + $defines
+    $runArgs = @('run', '-d', $targetDevice, "--$Mode") + $defines
     if ($Device -eq 'chrome') { $runArgs += @('--web-port=8080') }
     & flutter @runArgs
 } else {
     Write-Host '[4/4] flutter build...' -ForegroundColor Yellow
-    $target = if ($Device -eq 'chrome') { 'web' } else { 'windows' }
+    $target = switch ($Device) {
+        'chrome'  { 'web' }
+        'android' { 'apk' }
+        default   { 'windows' }
+    }
     $buildArgs = @('build', $target, "--$Mode") + $defines
     & flutter @buildArgs
     if ($LASTEXITCODE -ne 0) {
