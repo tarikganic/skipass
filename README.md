@@ -12,6 +12,47 @@ desktop aplikacije za osoblje i mobilne aplikacije za skijaše.
 
 ---
 
+## Brzi start
+
+Komande potrebne za pokretanje cijelog sistema, od nule, redom:
+
+1. Kopirati konfiguraciju i popuniti `.env` (`JWT_KEY`, `DB_PASSWORD`, `STRIPE_SECRET_KEY`,
+   `STRIPE_WEBHOOK_SECRET` - vidi [Konfiguracija](#1-konfiguracija)):
+   ```bash
+   cp .env.example .env
+   ```
+2. Pokrenuti cijeli backend (SQL Server, RabbitMQ, API, Worker) - iz korijena repozitorija:
+   ```bash
+   docker compose up --build
+   ```
+   API: `http://localhost:5000`, Swagger: `http://localhost:5000/swagger`. Baza, migracije
+   i seed podaci se kreiraju automatski, bez ijednog dodatnog ručnog koraka.
+3. Pokrenuti mobilnu aplikaciju (skijaš) - iz `mobile/skipass_mobile`:
+   ```bash
+   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:5000
+   ```
+4. Pokrenuti desktop aplikaciju (osoblje/administrator) - iz `desktop/skipass_desktop`:
+   ```bash
+   flutter run -d windows
+   ```
+
+### Korisnici za testiranje
+
+| Aplikacija | Korisničko ime | Lozinka | Rola |
+|---|---|---|---|
+| Mobilna (skijaš) | `mobile` | `test` | Skier |
+| Desktop (administrator) | `desktop` | `test` | Admin |
+
+Kompletna lista svih seed korisnika (osoblje, dodatni skijaši za demo podatke i sl.):
+[Korisnički podaci za pristup](#korisnički-podaci-za-pristup).
+
+Jedine dvije stvarne veze prema internetu koje sistem ostvaruje su Stripe (obavezan sandbox
+za plaćanje, po specifikaciji zadatka) i opcioni SMTP (Mailtrap sandbox, samo za e-mailove
+iz Worker servisa) - vidi [Vanjski servisi](#vanjski-servisi). Sve ostalo radi isključivo
+unutar `localhost`/Docker mreže.
+
+---
+
 ## Sadržaj
 
 - [Brzi start](#brzi-start)
@@ -26,45 +67,6 @@ desktop aplikacije za osoblje i mobilne aplikacije za skijaše.
 - [Korisnički podaci za pristup](#korisnički-podaci-za-pristup)
 - [Pregled API endpointa](#pregled-api-endpointa)
 - [Implementirana pravila](#implementirana-pravila)
-
----
-
-## Brzi start
-
-Kompletan redoslijed za pokretanje cijelog sistema od nule, bez prethodnog konteksta o projektu:
-
-1. **Preduslovi** - instalirati .NET SDK 10, Docker Desktop (ili lokalni SQL Server), Flutter
-   3.47+ i kreirati besplatan Stripe test nalog. Detalji: [Preduslovi](#preduslovi).
-2. **Konfiguracija** - `cp .env.example .env`, pa popuniti `JWT_KEY`, `DB_PASSWORD`,
-   `STRIPE_SECRET_KEY` i `STRIPE_WEBHOOK_SECRET`. Detalji: [Konfiguracija](#1-konfiguracija)
-   i [Plaćanje (Stripe)](#placanje-stripe).
-3. **Pokretanje backend-a** - iz korijena repozitorija:
-   ```bash
-   docker compose up --build
-   ```
-   Ovim se podižu SQL Server, RabbitMQ, API (`http://localhost:5000`, Swagger na `/swagger`)
-   i Worker servis - sve u jednoj Docker mreži, bez ijednog dodatnog ručnog koraka. Baza,
-   migracije i seed podaci se kreiraju automatski pri prvom pokretanju API-ja.
-4. **Mobilna aplikacija** (skijaš) - iz `mobile/skipass_mobile`:
-   ```bash
-   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:5000
-   ```
-   Detalji i build APK-a: [Mobilna aplikacija](#mobilna-aplikacija).
-5. **Desktop aplikacija** (osoblje/administrator) - iz `desktop/skipass_desktop`:
-   ```bash
-   flutter run -d windows
-   ```
-   Adresa API-ja je već `localhost` po defaultu. Detalji i build EXE-a:
-   [Desktop aplikacija](#desktop-aplikacija).
-6. **Prijava** - bilo kojim nalogom iz [Korisnički podaci za pristup](#korisnički-podaci-za-pristup)
-   (sve lozinke su `test`).
-
-Nijedan korak ne zahtijeva ručno kreiranje baze, pokretanje SQL skripti niti ručnu
-registraciju korisnika. Jedine dvije stvarne veze prema internetu koje sistem ostvaruje
-su Stripe (obavezan sandbox za plaćanje, po specifikaciji zadatka) i opciono SMTP
-(Mailtrap sandbox za e-mailove iz Worker servisa) - detaljno objašnjeno u
-[Vanjski servisi](#vanjski-servisi). Sve ostalo (API, baza, RabbitMQ, oba klijenta)
-radi isključivo unutar `localhost`/Docker mreže.
 
 ---
 
