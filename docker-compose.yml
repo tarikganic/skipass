@@ -80,6 +80,9 @@ services:
     build:
       context: ./backend
       dockerfile: src/SkiPass.Worker/Dockerfile
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_PAT: ${GITHUB_PAT}
     container_name: skipass-worker
     depends_on:
       skipass-rabbitmq:
@@ -90,13 +93,9 @@ services:
       RABBITMQ_PORT: ${RABBITMQ_PORT}
       RABBITMQ_USER: ${RABBITMQ_USER}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      SMTP_USE_SSL: ${SMTP_USE_SSL}
-      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
-      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      MAILTRAP_API_TOKEN: ${MAILTRAP_API_TOKEN}
+      MAILTRAP_FROM_EMAIL: ${MAILTRAP_FROM_EMAIL}
+      MAILTRAP_FROM_NAME: ${MAILTRAP_FROM_NAME}
     networks:
       - skipass-network
 

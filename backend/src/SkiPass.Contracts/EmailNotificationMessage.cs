@@ -3,7 +3,7 @@ namespace SkiPass.Contracts;
 /// <summary>
 /// Poruka na RabbitMQ redu "skipass.email-notifications". SkiPass.API je objavljuje
 /// (Infrastructure/Messaging/RabbitMqEmailPublisher), a SkiPass.Worker je konzumira i
-/// stvarno salje e-mail (Services/SmtpEmailSender). Namjerno je jedina zavisnost koju
+/// stvarno salje e-mail (Services/MailtrapEmailSender). Namjerno je jedina zavisnost koju
 /// SkiPass.Worker ima prema ostatku rjesenja - drzi radnik kao stvarno odvojen servis,
 /// umjesto da referencira citav web projekat.
 /// </summary>

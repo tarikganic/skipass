@@ -11,7 +11,7 @@ using SkiPass.Worker.Services;
 namespace SkiPass.Worker;
 
 /// <summary>
-/// Konzumira red "skipass.email-notifications" i stvarno salje e-mail preko SMTP-a.
+/// Konzumira red "skipass.email-notifications" i stvarno salje e-mail preko Mailtrap-a.
 /// Ovo je stvarno odvojen mikroservis: sopstveni proces, sopstveni Dockerfile,
 /// sopstveni unos u docker-compose.yml - ne IHostedService unutar API projekta.
 /// </summary>
@@ -27,10 +27,10 @@ public class EmailConsumerService : BackgroundService
     ];
 
     private readonly IConfiguration _configuration;
-    private readonly ISmtpEmailSender _emailSender;
+    private readonly IEmailSender _emailSender;
     private readonly ILogger<EmailConsumerService> _logger;
 
-    public EmailConsumerService(IConfiguration configuration, ISmtpEmailSender emailSender, ILogger<EmailConsumerService> logger)
+    public EmailConsumerService(IConfiguration configuration, IEmailSender emailSender, ILogger<EmailConsumerService> logger)
     {
         _configuration = configuration;
         _emailSender = emailSender;

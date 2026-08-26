@@ -14,7 +14,8 @@ desktop aplikacije za osoblje i mobilne aplikacije za skijaše.
 Komande potrebne za pokretanje cijelog sistema, od nule, redom:
 
 1. Kopirati konfiguraciju i popuniti `.env` (`JWT_KEY`, `DB_PASSWORD`, `STRIPE_SECRET_KEY`,
-   `STRIPE_WEBHOOK_SECRET` - vidi [Konfiguracija](#1-konfiguracija)):
+   `STRIPE_WEBHOOK_SECRET`, `GITHUB_USERNAME`, `GITHUB_PAT` - vidi [Konfiguracija](#1-konfiguracija)
+   i [RabbitMQ worker servis](#rabbitmq-worker-servis)):
    ```bash
    cp .env.example .env
    ```
@@ -44,7 +45,7 @@ Kompletna lista svih seed korisnika (osoblje, dodatni skijaši za demo podatke i
 [Korisnički podaci za pristup](#korisnički-podaci-za-pristup).
 
 Jedine dvije stvarne veze prema internetu koje sistem ostvaruje su Stripe (obavezan sandbox
-za plaćanje, po specifikaciji zadatka) i opcioni SMTP (Mailtrap sandbox, samo za e-mailove
+za plaćanje, po specifikaciji zadatka) i opcioni Mailtrap Email API (samo za e-mailove
 iz Worker servisa) - vidi [Vanjski servisi](#vanjski-servisi). Sve ostalo radi isključivo
 unutar `localhost`/Docker mreže.
 
@@ -81,7 +82,7 @@ backend/
     ├── SkiPass.Infrastructure/  EF Core DbContext, konfiguracije, migracije, servisi
     ├── SkiPass.API/             kontroleri, middleware, autentifikacija, Swagger
     ├── SkiPass.Contracts/       poruke dijeljene izmedju API-ja i Worker-a (RabbitMQ ugovor)
-    └── SkiPass.Worker/          odvojen mikroservis - konzumira RabbitMQ, salje e-mail (SMTP)
+    └── SkiPass.Worker/          odvojen mikroservis - konzumira RabbitMQ, salje e-mail (Mailtrap)
 
 mobile/
 └── skipass_mobile/
@@ -170,6 +171,7 @@ a u ostalim slučajevima je onemogućeno uz jasnu poruku korisniku.
 - [.NET SDK 10.0](https://dotnet.microsoft.com/download) ili noviji
 - Microsoft SQL Server (lokalna instalacija) **ili** Docker Desktop
 - Besplatan Stripe test/sandbox nalog ([dashboard.stripe.com/register](https://dashboard.stripe.com/register)) - potreban za `Stripe:SecretKey` i `Stripe:WebhookSecret`; API namjerno odbija da se pokrene bez njih (isto ponašanje kao za `Jwt:Key`)
+- GitHub [Personal Access Token](https://github.com/settings/tokens) sa `read:packages` ovlaštenjem (bilo koji GitHub nalog) - potreban da bi se pri build-u restaurirao Mailtrap .NET SDK paket sa GitHub Packages (vidi [RabbitMQ worker servis](#rabbitmq-worker-servis)); bez njega samo build `SkiPass.Worker` kontejnera ne uspijeva, ostatak sistema radi normalno
 
 ### 1. Konfiguracija
 
@@ -180,7 +182,9 @@ cp .env.example .env
 ```
 
 Obavezno promijenite `JWT_KEY` (najmanje 32 znaka) i `DB_PASSWORD`, te popunite
-`STRIPE_SECRET_KEY` i `STRIPE_WEBHOOK_SECRET` (vidi [Placanje (Stripe)](#placanje-stripe)).
+`STRIPE_SECRET_KEY` i `STRIPE_WEBHOOK_SECRET` (vidi [Placanje (Stripe)](#placanje-stripe)) i
+`GITHUB_USERNAME`/`GITHUB_PAT` (vidi [RabbitMQ worker servis](#rabbitmq-worker-servis)) -
+potrebni su da bi se pri build-u restaurirao Mailtrap paket koji koristi Worker servis.
 
 Ako koristite **lokalno instaliran SQL Server sa Windows autentifikacijom**, u `.env` postavite:
 
@@ -234,16 +238,23 @@ Sistem radi u potpunosti lokalno (Docker mreža `skipass-network` kada se pokre�
   (integracija plaćanja mora ići preko stvarnog sandbox okruženja, ne smije biti
   simulirana) - koriste ga backend (`PaymentService`) i mobilna aplikacija
   (`flutter_stripe` PaymentSheet). Nikad se ne kontaktira produkcijski Stripe nalog.
-- **SMTP (Mailtrap sandbox)** - koristi isključivo `SkiPass.Worker` za slanje e-mailova
-  iz sistemskih notifikacija; potpuno je opciono i izolovano od ostatka sistema - ako SMTP
-  podaci nisu podešeni u `.env`, Worker se i dalje normalno pokreće i konzumira RabbitMQ
-  red, samo pojedinačno slanje e-maila neuspije uz jasnu grešku u logu. E-mailovi
-  zavrsavaju u Mailtrap test inboxu, nikad ne stižu stvarnim primaocima.
+- **Mailtrap Email API** (`send.api.mailtrap.io`, preko Mailtrap .NET SDK-a) - koristi
+  isključivo `SkiPass.Worker` za slanje e-mailova iz sistemskih notifikacija; potpuno je
+  opciono i izolovano od ostatka sistema - ako `MAILTRAP_API_TOKEN` nije podešen u `.env`,
+  Worker se i dalje normalno pokreće i konzumira RabbitMQ red, samo pojedinačno slanje
+  e-maila neuspije uz jasnu grešku u logu. E-mailovi se šalju kroz Mailtrap sandbox/test
+  okruženje - provjeravaju se na [mailtrap.io/sending/email_logs](https://mailtrap.io/sending/email_logs),
+  nikad ne stižu stvarnim primaocima.
 
 Nema nikakvih drugih vanjskih poziva - bez telemetrije, analitike, licencnih provjera,
 mapa ili vremenskih API-ja i slično (podaci o vremenskim uslovima su statični seed
 podaci, ne dohvaćaju se uživo). API, baza, RabbitMQ i oba klijenta (mobilni i desktop)
 međusobno komuniciraju isključivo preko `localhost`/Docker mreže.
+
+Napomena: sama **restauracija Mailtrap NuGet paketa** (`dotnet restore`/`docker compose build`)
+zahtijeva prijavu na GitHub Packages (vidi [RabbitMQ worker servis](#rabbitmq-worker-servis))
+- to je jednokratna konekcija pri build-u, odvojena od gorenavedenih veza koje aplikacija
+ostvaruje dok radi.
 
 ---
 
@@ -259,9 +270,29 @@ servisnom sloju) se automatski objavljuje na RabbitMQ red `skipass.email-notific
 preko jedne tačke integracije - `ApplicationDbContext.SaveChangesAsync` prepoznaje nove
 `Notification` zapise nakon uspješnog upisa i poziva `IEmailQueuePublisher`
 (`SkiPass.Infrastructure/Messaging/RabbitMqEmailPublisher.cs`). `SkiPass.Worker` konzumira
-taj red (`AsyncEventingBasicConsumer`) i stvarno šalje e-mail preko SMTP-a (MailKit).
+taj red (`AsyncEventingBasicConsumer`) i stvarno šalje e-mail preko
+[Mailtrap-a](https://mailtrap.io) (Mailtrap .NET SDK, Email API - ne SMTP).
 Neuspjelo slanje se ponavlja sa eksponencijalnim odmakom (1s → 2s → 4s → 8s), uz logovanje
 svakog pokušaja - ne guta se tiho.
+
+### Instalacija Mailtrap SDK-a
+
+Mailtrap-ov .NET SDK se distribuira preko GitHub Packages, koji zahtijeva prijavu i za
+javne pakete. Izvor paketa je već definisan u `backend/NuGet.config` (kredencijali se čitaju
+iz `%GITHUB_USERNAME%`/`%GITHUB_PAT%` varijabli okruženja, nikad upisani u sam fajl).
+
+1. Kreirati [Personal Access Token](https://github.com/settings/tokens) na bilo kom GitHub
+   nalogu, sa `read:packages` ovlaštenjem (classic token je najjednostavniji).
+2. Popuniti `GITHUB_USERNAME` i `GITHUB_PAT` u `.env`.
+3. Lokalno (bez Dockera), postaviti iste vrijednosti kao stvarne varijable okruženja prije
+   restauracije (`dotnet restore`/`dotnet build` ih čita direktno iz okruženja, ne iz `.env`):
+   ```bash
+   export GITHUB_USERNAME=vas-github-username
+   export GITHUB_PAT=vas-personal-access-token
+   dotnet add package Mailtrap --project backend/src/SkiPass.Worker --source github-mailtrap
+   ```
+   Kroz Docker (`docker compose up --build`), iste vrijednosti se automatski prosljeđuju
+   kao build argumenti iz `.env` - nije potrebna nikakva dodatna komanda.
 
 Pokretanje bez Dockera (npr. dva odvojena terminala):
 
@@ -269,10 +300,9 @@ Pokretanje bez Dockera (npr. dva odvojena terminala):
 dotnet run --project backend/src/SkiPass.Worker
 ```
 
-Bez podešenog `SMTP_USERNAME`/`SMTP_PASSWORD` u `.env`, Worker se i dalje pokreće i
-konzumira red - slanje pojedinačnog e-maila će neuspjeti uz jasnu grešku u logu (stvaran
-pokušaj SMTP konekcije, ne tiho preskakanje), što je i očekivano dok se ne unesu stvarni
-SMTP podaci (npr. Gmail app password ili [Mailtrap](https://mailtrap.io) sandbox nalog).
+Bez podešenog `MAILTRAP_API_TOKEN` u `.env`, Worker se i dalje pokreće i konzumira red -
+slanje pojedinačnog e-maila će neuspjeti uz jasnu grešku u logu, što je i očekivano dok se
+ne unese stvaran API token (besplatan Mailtrap nalog, Sending Domains/Sandbox → API Tokens).
 
 ---
 

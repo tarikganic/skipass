@@ -2,7 +2,7 @@ namespace SkiPass.API.Security;
 
 /// <summary>
 /// Ucitava konfiguraciju iz .env datoteke i preslikava je u ASP.NET konfiguracijske kljuceve.
-/// Sve tajne (konekcijski string, JWT kljuc, SMTP i slicno) drze se iskljucivo ovdje,
+/// Sve tajne (konekcijski string, JWT kljuc, Mailtrap i slicno) drze se iskljucivo ovdje,
 /// a ne u appsettings.json niti u izvornom kodu.
 /// </summary>
 public static class DotEnvLoader
@@ -18,13 +18,9 @@ public static class DotEnvLoader
         ("RabbitMQ__Port", "RABBITMQ_PORT"),
         ("RabbitMQ__Username", "RABBITMQ_USER"),
         ("RabbitMQ__Password", "RABBITMQ_PASSWORD"),
-        ("Smtp__Host", "SMTP_HOST"),
-        ("Smtp__Port", "SMTP_PORT"),
-        ("Smtp__Username", "SMTP_USERNAME"),
-        ("Smtp__Password", "SMTP_PASSWORD"),
-        ("Smtp__UseSsl", "SMTP_USE_SSL"),
-        ("Smtp__FromEmail", "SMTP_FROM_EMAIL"),
-        ("Smtp__FromName", "SMTP_FROM_NAME"),
+        ("Mailtrap__ApiToken", "MAILTRAP_API_TOKEN"),
+        ("Mailtrap__FromEmail", "MAILTRAP_FROM_EMAIL"),
+        ("Mailtrap__FromName", "MAILTRAP_FROM_NAME"),
         ("Stripe__SecretKey", "STRIPE_SECRET_KEY"),
         ("Stripe__PublishableKey", "STRIPE_PUBLISHABLE_KEY"),
         ("Stripe__WebhookSecret", "STRIPE_WEBHOOK_SECRET"),

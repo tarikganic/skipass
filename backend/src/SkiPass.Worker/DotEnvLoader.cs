@@ -1,7 +1,7 @@
 namespace SkiPass.Worker;
 
 /// <summary>
-/// Ucitava RabbitMQ i SMTP vrijednosti iz .env datoteke u korijenu projekta, za lokalno
+/// Ucitava RabbitMQ i Mailtrap vrijednosti iz .env datoteke u korijenu projekta, za lokalno
 /// pokretanje bez Dockera. Mala, namjerno duplirana verzija SkiPass.API/Security/DotEnvLoader.cs
 /// (samo kljucevi koje ovaj servis stvarno koristi) - radnik ne referencira API projekat.
 /// U Docker okruzenju docker-compose vec postavlja iste varijable direktno u environment,
@@ -15,13 +15,9 @@ public static class DotEnvLoader
         ("RabbitMQ__Port", "RABBITMQ_PORT"),
         ("RabbitMQ__Username", "RABBITMQ_USER"),
         ("RabbitMQ__Password", "RABBITMQ_PASSWORD"),
-        ("Smtp__Host", "SMTP_HOST"),
-        ("Smtp__Port", "SMTP_PORT"),
-        ("Smtp__Username", "SMTP_USERNAME"),
-        ("Smtp__Password", "SMTP_PASSWORD"),
-        ("Smtp__UseSsl", "SMTP_USE_SSL"),
-        ("Smtp__FromEmail", "SMTP_FROM_EMAIL"),
-        ("Smtp__FromName", "SMTP_FROM_NAME")
+        ("Mailtrap__ApiToken", "MAILTRAP_API_TOKEN"),
+        ("Mailtrap__FromEmail", "MAILTRAP_FROM_EMAIL"),
+        ("Mailtrap__FromName", "MAILTRAP_FROM_NAME")
     ];
 
     public static void Load()
