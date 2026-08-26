@@ -1,0 +1,66 @@
+﻿{
+    "items":  [
+                  {
+                      "id":  1,
+                      "name":  "Alpina Sport",
+                      "description":  "Iznajmljivanje i servis skijaske opreme.",
+                      "contactEmail":  "info@alpinasport.ba",
+                      "contactPhone":  "+387 36 555 200",
+                      "website":  "https://www.alpinasport.ba",
+                      "logoUrl":  null,
+                      "address":  "Podnozje staze 1",
+                      "isActive":  true,
+                      "cityId":  3,
+                      "cityName":  "Konjic",
+                      "benefitCount":  7
+                  },
+                  {
+                      "id":  4,
+                      "name":  "Hotel Bjelasnica",
+                      "description":  "Smjestaj u neposrednoj blizini staza.",
+                      "contactEmail":  "booking@hotelbjelasnica.ba",
+                      "contactPhone":  "+387 33 555 500",
+                      "website":  "https://www.hotelbjelasnica.ba",
+                      "logoUrl":  null,
+                      "address":  "Babin do bb",
+                      "isActive":  true,
+                      "cityId":  2,
+                      "cityName":  "Sarajevo",
+                      "benefitCount":  1
+                  },
+                  {
+                      "id":  2,
+                      "name":  "Restoran Vidikovac",
+                      "description":  "Restoran domace kuhinje na vrhu skijalista.",
+                      "contactEmail":  "rezervacije@vidikovac.ba",
+                      "contactPhone":  "+387 36 555 300",
+                      "website":  null,
+                      "logoUrl":  null,
+                      "address":  "Vrh Bjelasnice bb",
+                      "isActive":  true,
+                      "cityId":  3,
+                      "cityName":  "Konjic",
+                      "benefitCount":  2
+                  },
+                  {
+                      "id":  3,
+                      "name":  "Ski skola Snjezana",
+                      "description":  "Licencirani instruktori skijanja i snowboarda.",
+                      "contactEmail":  "skola@snjezana.ba",
+                      "contactPhone":  "+387 61 555 400",
+                      "website":  null,
+                      "logoUrl":  null,
+                      "address":  "Pocetnicka staza bb",
+                      "isActive":  true,
+                      "cityId":  3,
+                      "cityName":  "Konjic",
+                      "benefitCount":  2
+                  }
+              ],
+    "totalCount":  4,
+    "page":  1,
+    "pageSize":  5,
+    "totalPages":  1,
+    "hasPreviousPage":  false,
+    "hasNextPage":  false
+}

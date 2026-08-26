@@ -1,0 +1,52 @@
+﻿{
+    "items":  [
+                  {
+                      "id":  5,
+                      "name":  "Banja Luka",
+                      "postalCode":  "78000",
+                      "countryId":  1,
+                      "countryName":  "Bosna i Hercegovina"
+                  },
+                  {
+                      "id":  4,
+                      "name":  "Jablanica",
+                      "postalCode":  "88420",
+                      "countryId":  1,
+                      "countryName":  "Bosna i Hercegovina"
+                  },
+                  {
+                      "id":  3,
+                      "name":  "Konjic",
+                      "postalCode":  "88400",
+                      "countryId":  1,
+                      "countryName":  "Bosna i Hercegovina"
+                  },
+                  {
+                      "id":  1,
+                      "name":  "Mostar",
+                      "postalCode":  "88000",
+                      "countryId":  1,
+                      "countryName":  "Bosna i Hercegovina"
+                  },
+                  {
+                      "id":  2,
+                      "name":  "Sarajevo",
+                      "postalCode":  "71000",
+                      "countryId":  1,
+                      "countryName":  "Bosna i Hercegovina"
+                  },
+                  {
+                      "id":  6,
+                      "name":  "Zagreb",
+                      "postalCode":  "10000",
+                      "countryId":  2,
+                      "countryName":  "Hrvatska"
+                  }
+              ],
+    "totalCount":  6,
+    "page":  1,
+    "pageSize":  10,
+    "totalPages":  1,
+    "hasPreviousPage":  false,
+    "hasNextPage":  false
+}

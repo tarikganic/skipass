@@ -1,0 +1,29 @@
+[
+  {
+    "id": 5,
+    "name": "Iznajmljivanje skija Rossignol",
+    "description": "Testirajte najnovije skije prije kupovine.",
+    "imageUrl": null,
+    "price": 40.0,
+    "discountPercentage": 10,
+    "effectivePrice": 36.0,
+    "brand": "Rossignol",
+    "averageRating": 4.5,
+    "ratingCount": 12,
+    "benefitCategoryId": 2,
+    "benefitCategoryName": "Iznajmljivanje opreme",
+    "skiResortId": 1,
+    "skiResortName": "Bjelasnica",
+    "partnerId": 3,
+    "partnerName": "SkiRent Sarajevo",
+    "score": 3,
+    "reasons": [
+      {
+        "code": "PurchasedCategory",
+        "categoryName": "Iznajmljivanje opreme",
+        "partnerName": null,
+        "brand": null
+      }
+    ]
+  }
+]

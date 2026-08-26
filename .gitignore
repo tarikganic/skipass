@@ -1,0 +1,33 @@
+# Konfiguracija sa tajnama - nikada se ne postavlja na repozitorij
+.env
+
+# .NET build artefakti
+bin/
+obj/
+*.user
+*.suo
+.vs/
+artifacts/
+
+# Flutter build artefakti
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+
+# Ostalo
+*.log
+.DS_Store
+Thumbs.db
+
+# Testni podaci mobilne aplikacije se namjerno cuvaju u repozitoriju
+# jer testovi provjeravaju prikaz nad stvarnim odgovorima API-ja.
+!mobile/skipass_mobile/test/fixtures/
+
+# Visual Studio
+.vs/
+
+# Lokalni alati / IDE konfiguracija
+.claude/
+.vscode/
+.idea/

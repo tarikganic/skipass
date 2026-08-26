@@ -1,0 +1,34 @@
+﻿{
+    "items":  [
+                  {
+                      "id":  4,
+                      "name":  "Austrija",
+                      "isoCode":  "AUT",
+                      "cityCount":  0
+                  },
+                  {
+                      "id":  1,
+                      "name":  "Bosna i Hercegovina",
+                      "isoCode":  "BIH",
+                      "cityCount":  5
+                  },
+                  {
+                      "id":  2,
+                      "name":  "Hrvatska",
+                      "isoCode":  "HRV",
+                      "cityCount":  1
+                  },
+                  {
+                      "id":  3,
+                      "name":  "Srbija",
+                      "isoCode":  "SRB",
+                      "cityCount":  0
+                  }
+              ],
+    "totalCount":  4,
+    "page":  1,
+    "pageSize":  10,
+    "totalPages":  1,
+    "hasPreviousPage":  false,
+    "hasNextPage":  false
+}

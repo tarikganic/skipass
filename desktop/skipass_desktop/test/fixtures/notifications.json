@@ -1,0 +1,70 @@
+﻿{
+    "items":  [
+                  {
+                      "id":  20,
+                      "title":  "Status prijave incidenta",
+                      "message":  "Status vase prijave je promijenjen u \"Resolved\".",
+                      "type":  "IncidentStatusChanged",
+                      "isRead":  false,
+                      "readAt":  null,
+                      "targetRoute":  "/incidents/3",
+                      "createdAt":  "2026-08-25T10:07:52.2075354",
+                      "userId":  6,
+                      "userFullName":  "Ivana Peric"
+                  },
+                  {
+                      "id":  19,
+                      "title":  "Status prijave incidenta",
+                      "message":  "Status vase prijave je promijenjen u \"InProgress\".",
+                      "type":  "IncidentStatusChanged",
+                      "isRead":  false,
+                      "readAt":  null,
+                      "targetRoute":  "/incidents/3",
+                      "createdAt":  "2026-08-25T10:07:35.0691065",
+                      "userId":  6,
+                      "userFullName":  "Ivana Peric"
+                  },
+                  {
+                      "id":  18,
+                      "title":  "Narudzba SP-20260825-JFTM3SC7",
+                      "message":  "Narudzba je otkazana. Razlog: Testno otkazivanje narudzbe.",
+                      "type":  "OrderCancelled",
+                      "isRead":  true,
+                      "readAt":  "2026-08-25T00:27:18.8305519",
+                      "targetRoute":  "/orders/11",
+                      "createdAt":  "2026-08-25T00:27:13.6198305",
+                      "userId":  4,
+                      "userFullName":  "Lejla Music"
+                  },
+                  {
+                      "id":  17,
+                      "title":  "Narudzba je zaprimljena",
+                      "message":  "Vasa narudzba SP-20260825-JFTM3SC7 je zaprimljena. Ukupan iznos je 113.40 BAM.",
+                      "type":  "General",
+                      "isRead":  true,
+                      "readAt":  "2026-08-25T00:27:18.8305519",
+                      "targetRoute":  "/orders/11",
+                      "createdAt":  "2026-08-25T00:27:12.3007482",
+                      "userId":  4,
+                      "userFullName":  "Lejla Music"
+                  },
+                  {
+                      "id":  16,
+                      "title":  "Narudzba SP-20260825-LN8DVBAD",
+                      "message":  "Narudzba je otkazana. Razlog: Testno otkazivanje narudzbe.",
+                      "type":  "OrderCancelled",
+                      "isRead":  true,
+                      "readAt":  "2026-08-25T00:21:39.503888",
+                      "targetRoute":  "/orders/10",
+                      "createdAt":  "2026-08-25T00:21:35.7012618",
+                      "userId":  4,
+                      "userFullName":  "Lejla Music"
+                  }
+              ],
+    "totalCount":  20,
+    "page":  1,
+    "pageSize":  5,
+    "totalPages":  4,
+    "hasPreviousPage":  false,
+    "hasNextPage":  true
+}

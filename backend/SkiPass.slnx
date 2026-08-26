@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SkiPass.API/SkiPass.API.csproj" />
+    <Project Path="src/SkiPass.Application/SkiPass.Application.csproj" />
+    <Project Path="src/SkiPass.Contracts/SkiPass.Contracts.csproj" />
+    <Project Path="src/SkiPass.Domain/SkiPass.Domain.csproj" />
+    <Project Path="src/SkiPass.Infrastructure/SkiPass.Infrastructure.csproj" />
+    <Project Path="src/SkiPass.Worker/SkiPass.Worker.csproj" />
+  </Folder>
+</Solution>

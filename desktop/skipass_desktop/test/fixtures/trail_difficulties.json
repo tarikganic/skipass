@@ -1,0 +1,34 @@
+﻿{
+    "items":  [
+                  {
+                      "id":  1,
+                      "name":  "Plava",
+                      "description":  "Laka staza, pogodna za pocetnike.",
+                      "colorHex":  "#1E88E5",
+                      "sortOrder":  1,
+                      "trailCount":  2
+                  },
+                  {
+                      "id":  2,
+                      "name":  "Crvena",
+                      "description":  "Srednje zahtjevna staza za iskusnije skijase.",
+                      "colorHex":  "#E53935",
+                      "sortOrder":  2,
+                      "trailCount":  2
+                  },
+                  {
+                      "id":  3,
+                      "name":  "Crna",
+                      "description":  "Zahtjevna staza za napredne skijase.",
+                      "colorHex":  "#212121",
+                      "sortOrder":  3,
+                      "trailCount":  2
+                  }
+              ],
+    "totalCount":  3,
+    "page":  1,
+    "pageSize":  10,
+    "totalPages":  1,
+    "hasPreviousPage":  false,
+    "hasNextPage":  false
+}

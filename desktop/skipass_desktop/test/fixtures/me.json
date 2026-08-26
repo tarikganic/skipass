@@ -1,0 +1,18 @@
+﻿{
+    "id":  1,
+    "username":  "desktop",
+    "firstName":  "Tarik",
+    "lastName":  "Ganic",
+    "fullName":  "Tarik Ganic",
+    "email":  "admin@skipass.ba",
+    "phone":  "+387 61 100 100",
+    "birthDate":  "1996-04-12T00:00:00",
+    "profileImageUrl":  null,
+    "role":  "Admin",
+    "isActive":  true,
+    "lastLoginAt":  "2026-08-25T10:09:52.4153522",
+    "cityId":  1,
+    "cityName":  "Mostar",
+    "createdAt":  "2026-08-25T00:03:55.6508988",
+    "orderCount":  0
+}

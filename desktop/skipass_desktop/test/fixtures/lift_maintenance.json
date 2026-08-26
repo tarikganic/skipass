@@ -1,0 +1,47 @@
+﻿{
+    "items":  [
+                  {
+                      "id":  1,
+                      "reportedAt":  "2026-08-23T00:03:56.3889729",
+                      "resolvedAt":  null,
+                      "description":  "Kvar na pogonskom motoru, lift se ne pokrece.",
+                      "resolutionNote":  null,
+                      "status":  "InProgress",
+                      "requiresShutdown":  true,
+                      "skiLiftId":  6,
+                      "skiLiftName":  "Sidro Ponor",
+                      "reportedByUserId":  2,
+                      "reportedByUserName":  "Amina Hodzic",
+                      "resolvedByUserId":  null,
+                      "resolvedByUserName":  null,
+                      "allowedNextStatuses":  [
+                                                  "Completed",
+                                                  "Cancelled"
+                                              ]
+                  },
+                  {
+                      "id":  2,
+                      "reportedAt":  "2026-08-11T00:03:56.3892036",
+                      "resolvedAt":  "2026-08-12T00:03:56.3892037",
+                      "description":  "Redovno servisiranje sajle i podmazivanje lezajeva.",
+                      "resolutionNote":  "Servis zavrsen, lift vracen u pogon.",
+                      "status":  "Completed",
+                      "requiresShutdown":  false,
+                      "skiLiftId":  2,
+                      "skiLiftName":  "Sjedeznica Stit",
+                      "reportedByUserId":  3,
+                      "reportedByUserName":  "Emir Balic",
+                      "resolvedByUserId":  2,
+                      "resolvedByUserName":  "Amina Hodzic",
+                      "allowedNextStatuses":  [
+
+                                              ]
+                  }
+              ],
+    "totalCount":  2,
+    "page":  1,
+    "pageSize":  100,
+    "totalPages":  1,
+    "hasPreviousPage":  false,
+    "hasNextPage":  false
+}

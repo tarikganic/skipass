@@ -1,0 +1,26 @@
+﻿{
+    "top":  5,
+    "users":  [
+                  {
+                      "userId":  4,
+                      "fullName":  "Lejla Music",
+                      "email":  "skijas@skipass.ba",
+                      "ticketCount":  3,
+                      "totalSpent":  271.10
+                  },
+                  {
+                      "userId":  6,
+                      "fullName":  "Ivana Peric",
+                      "email":  "skijas3@skipass.ba",
+                      "ticketCount":  1,
+                      "totalSpent":  226.10
+                  },
+                  {
+                      "userId":  5,
+                      "fullName":  "Haris Softic",
+                      "email":  "skijas2@skipass.ba",
+                      "ticketCount":  1,
+                      "totalSpent":  113.40
+                  }
+              ]
+}
