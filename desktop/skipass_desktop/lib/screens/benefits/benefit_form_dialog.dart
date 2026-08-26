@@ -125,12 +125,24 @@ class _BenefitFormDialogState extends State<BenefitFormDialog> {
     setState(() => _newImage = File(file.path));
   }
 
+  Future<void> _removeImage() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await AppFeedback.confirm(
+      context,
+      title: l10n.removeImageConfirmTitle,
+      message: l10n.removeImageConfirmMessage,
+      confirmLabel: l10n.removeImageAction,
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    setState(() {
+      _imageUrl = null;
+      _newImage = null;
+    });
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_selectedResort == null || _selectedCategory == null) {
-      AppFeedback.error(context, AppLocalizations.of(context)!.benefitFormDialogSelectRequired);
-      return;
-    }
 
     setState(() => _isSubmitting = true);
 
@@ -183,7 +195,7 @@ class _BenefitFormDialogState extends State<BenefitFormDialog> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _ImagePreview(imageUrl: _imageUrl, newImage: _newImage, onPick: _pickImage),
+                  _ImagePreview(imageUrl: _imageUrl, newImage: _newImage, onPick: _pickImage, onRemove: _removeImage),
                   const SizedBox(height: AppSpacing.xl),
                   AppTextField(
                     label: l10n.benefitFormDialogNameLabel,
@@ -209,6 +221,8 @@ class _BenefitFormDialogState extends State<BenefitFormDialog> {
                           value: _selectedCategory,
                           isRequired: true,
                           itemLabel: (c) => c.name,
+                          validator: (value) =>
+                              value == null ? l10n.selectFieldRequiredError(l10n.announcementFormDialogCategoryLabel) : null,
                           onChanged: (value) => setState(() => _selectedCategory = value),
                         ),
                       ),
@@ -220,6 +234,7 @@ class _BenefitFormDialogState extends State<BenefitFormDialog> {
                           value: _selectedResort,
                           isRequired: true,
                           itemLabel: (r) => r.name,
+                          validator: (value) => value == null ? l10n.selectFieldRequiredError(l10n.commonResortLabel) : null,
                           onChanged: (value) => setState(() => _selectedResort = value),
                         ),
                       ),
@@ -285,11 +300,12 @@ class _BenefitFormDialogState extends State<BenefitFormDialog> {
 }
 
 class _ImagePreview extends StatelessWidget {
-  const _ImagePreview({required this.imageUrl, required this.newImage, required this.onPick});
+  const _ImagePreview({required this.imageUrl, required this.newImage, required this.onPick, required this.onRemove});
 
   final String? imageUrl;
   final File? newImage;
   final VoidCallback onPick;
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -313,10 +329,21 @@ class _ImagePreview extends StatelessWidget {
           child: hasImage ? null : const Icon(Icons.local_offer_outlined, size: 30),
         ),
         const SizedBox(width: AppSpacing.lg),
-        OutlinedButton.icon(
-          onPressed: onPick,
-          icon: const Icon(Icons.upload_outlined, size: AppSizes.iconSm),
-          label: Text(hasImage ? l10n.profileDialogChangePhoto : l10n.benefitFormDialogAddPhoto),
+        Wrap(
+          spacing: AppSpacing.sm,
+          children: [
+            OutlinedButton.icon(
+              onPressed: onPick,
+              icon: const Icon(Icons.upload_outlined, size: AppSizes.iconSm),
+              label: Text(hasImage ? l10n.profileDialogChangePhoto : l10n.benefitFormDialogAddPhoto),
+            ),
+            if (hasImage)
+              TextButton.icon(
+                onPressed: onRemove,
+                icon: const Icon(Icons.delete_outline_rounded, size: AppSizes.iconSm),
+                label: Text(l10n.commonRemove),
+              ),
+          ],
         ),
       ],
     );

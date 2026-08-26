@@ -108,12 +108,24 @@ class _TrailFormDialogState extends State<TrailFormDialog> {
     setState(() => _newImage = File(file.path));
   }
 
+  Future<void> _removeImage() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await AppFeedback.confirm(
+      context,
+      title: l10n.removeImageConfirmTitle,
+      message: l10n.removeImageConfirmMessage,
+      confirmLabel: l10n.removeImageAction,
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    setState(() {
+      _imageUrl = null;
+      _newImage = null;
+    });
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_selectedResort == null || _selectedDifficulty == null) {
-      AppFeedback.error(context, AppLocalizations.of(context)!.trailFormDialogSelectRequired);
-      return;
-    }
 
     setState(() => _isSubmitting = true);
 
@@ -171,10 +183,7 @@ class _TrailFormDialogState extends State<TrailFormDialog> {
                     imageUrl: _imageUrl,
                     newImage: _newImage,
                     onPick: _pickImage,
-                    onRemove: () => setState(() {
-                      _imageUrl = null;
-                      _newImage = null;
-                    }),
+                    onRemove: _removeImage,
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   Row(
@@ -212,6 +221,7 @@ class _TrailFormDialogState extends State<TrailFormDialog> {
                           value: _selectedResort,
                           isRequired: true,
                           itemLabel: (r) => r.name,
+                          validator: (value) => value == null ? l10n.selectFieldRequiredError(l10n.commonResortLabel) : null,
                           onChanged: (value) => setState(() => _selectedResort = value),
                         ),
                       ),
@@ -223,6 +233,8 @@ class _TrailFormDialogState extends State<TrailFormDialog> {
                           value: _selectedDifficulty,
                           isRequired: true,
                           itemLabel: (d) => d.name,
+                          validator: (value) =>
+                              value == null ? l10n.selectFieldRequiredError(l10n.trailFormDialogDifficultyLabel) : null,
                           onChanged: (value) => setState(() => _selectedDifficulty = value),
                         ),
                       ),

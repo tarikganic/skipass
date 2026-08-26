@@ -320,10 +320,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liftMaintenanceButton => 'Maintenance';
 
   @override
-  String get skiLiftFormDialogSelectRequired =>
-      'Select a resort and a lift type.';
-
-  @override
   String get skiLiftFormDialogEditTitle => 'Edit ski lift';
 
   @override
@@ -352,10 +348,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get skiLiftFormDialogOperationalSwitch => 'Lift is operational';
-
-  @override
-  String get trailFormDialogSelectRequired =>
-      'Select a resort and a trail difficulty.';
 
   @override
   String get trailFormDialogEditTitle => 'Edit trail';
@@ -607,9 +599,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderDetailRefundButton => 'Refund';
 
   @override
-  String get ticketTypeDialogSelectResortRequired => 'Select a resort.';
-
-  @override
   String get ticketTypeDialogEditTitle => 'Edit ticket type';
 
   @override
@@ -632,10 +621,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ticketTypeDialogActiveSwitch => 'Active (available for purchase)';
-
-  @override
-  String get validateTicketDialogSelectLiftRequired =>
-      'Select the ski lift where validation is taking place.';
 
   @override
   String get validateTicketDialogTitle => 'Validate ticket';
@@ -786,10 +771,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get incidentsActionReject => 'Reject';
 
   @override
-  String get reportIncidentDialogSelectRequired =>
-      'Select an incident type and location.';
-
-  @override
   String get reportIncidentDialogSuccess => 'Incident reported.';
 
   @override
@@ -864,10 +845,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String announcementsScreenExpiresLabel(String date) {
     return 'expires $date';
   }
-
-  @override
-  String get announcementFormDialogSelectRequired =>
-      'Select a category and a resort.';
 
   @override
   String get announcementFormDialogExpiryError =>
@@ -956,10 +933,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String partnerBenefitCountLabel(int count) {
     return '$count benefits';
   }
-
-  @override
-  String get benefitFormDialogSelectRequired =>
-      'Select a resort and a category.';
 
   @override
   String get benefitFormDialogEditTitle => 'Edit benefit';
@@ -1062,10 +1035,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String referenceDataScreenRelatedCountLabel(int count) {
     return '$count related';
   }
-
-  @override
-  String get referenceItemFormDialogSelectCountryRequired =>
-      'Select a country.';
 
   @override
   String referenceItemFormDialogEditTitle(String label) {
@@ -1187,4 +1156,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportsScreenNoPurchaseData => 'No purchase data.';
+
+  @override
+  String selectFieldRequiredError(String field) {
+    return 'Please select $field.';
+  }
+
+  @override
+  String get removeImageConfirmTitle => 'Remove image?';
+
+  @override
+  String get removeImageConfirmMessage =>
+      'The image will be removed. You can undo this only by adding an image again before saving your changes.';
+
+  @override
+  String get removeImageAction => 'Remove image';
 }

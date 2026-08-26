@@ -89,10 +89,6 @@ class _ReferenceItemFormDialogState extends State<ReferenceItemFormDialog> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (widget.config.hasCountry && _selectedCountry == null) {
-      AppFeedback.error(context, AppLocalizations.of(context)!.referenceItemFormDialogSelectCountryRequired);
-      return;
-    }
 
     setState(() => _isSubmitting = true);
 
@@ -174,6 +170,8 @@ class _ReferenceItemFormDialogState extends State<ReferenceItemFormDialog> {
                       isRequired: true,
                       itemLabel: (c) => c.name,
                       emptyHint: l10n.referenceItemFormDialogNoCountriesHint,
+                      validator: (value) =>
+                          value == null ? l10n.selectFieldRequiredError(l10n.referenceItemFormDialogCountryLabel) : null,
                       onChanged: (value) => setState(() => _selectedCountry = value),
                     ),
                     const SizedBox(height: AppSpacing.lg),

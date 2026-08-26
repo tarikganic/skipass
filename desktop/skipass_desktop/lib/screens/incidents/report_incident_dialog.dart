@@ -90,12 +90,21 @@ class _ReportIncidentDialogState extends State<ReportIncidentDialog> {
     setState(() => _image = File(file.path));
   }
 
+  Future<void> _removeImage() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await AppFeedback.confirm(
+      context,
+      title: l10n.removeImageConfirmTitle,
+      message: l10n.removeImageConfirmMessage,
+      confirmLabel: l10n.removeImageAction,
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    setState(() => _image = null);
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_selectedType == null || _selectedTarget == null) {
-      AppFeedback.error(context, AppLocalizations.of(context)!.reportIncidentDialogSelectRequired);
-      return;
-    }
 
     setState(() => _isSubmitting = true);
 
@@ -150,6 +159,8 @@ class _ReportIncidentDialogState extends State<ReportIncidentDialog> {
                     value: _selectedType,
                     isRequired: true,
                     itemLabel: (t) => t.name,
+                    validator: (value) =>
+                        value == null ? l10n.selectFieldRequiredError(l10n.reportIncidentDialogTypeLabel) : null,
                     onChanged: (value) => setState(() => _selectedType = value),
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -175,6 +186,10 @@ class _ReportIncidentDialogState extends State<ReportIncidentDialog> {
                     isRequired: true,
                     itemLabel: (t) => t.name,
                     emptyHint: l10n.reportIncidentDialogNoRecords,
+                    validator: (value) => value == null
+                        ? l10n.selectFieldRequiredError(
+                            _target == _Target.trail ? l10n.reportIncidentDialogTrailSegment : l10n.reportIncidentDialogLiftSegment)
+                        : null,
                     onChanged: (value) => setState(() => _selectedTarget = value),
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -197,7 +212,8 @@ class _ReportIncidentDialogState extends State<ReportIncidentDialog> {
                         const SizedBox(width: AppSpacing.sm),
                         IconButton(
                           icon: const Icon(Icons.close_rounded, size: AppSizes.iconSm),
-                          onPressed: () => setState(() => _image = null),
+                          tooltip: l10n.removeImageAction,
+                          onPressed: _removeImage,
                         ),
                       ],
                     ],

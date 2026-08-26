@@ -321,10 +321,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get liftMaintenanceButton => 'Odrzavanje';
 
   @override
-  String get skiLiftFormDialogSelectRequired =>
-      'Odaberite skijaliste i tip lifta.';
-
-  @override
   String get skiLiftFormDialogEditTitle => 'Uredi ski lift';
 
   @override
@@ -353,10 +349,6 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get skiLiftFormDialogOperationalSwitch => 'Lift je u pogonu';
-
-  @override
-  String get trailFormDialogSelectRequired =>
-      'Odaberite skijaliste i tezinu staze.';
 
   @override
   String get trailFormDialogEditTitle => 'Uredi stazu';
@@ -611,9 +603,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get orderDetailRefundButton => 'Povrat';
 
   @override
-  String get ticketTypeDialogSelectResortRequired => 'Odaberite skijaliste.';
-
-  @override
   String get ticketTypeDialogEditTitle => 'Uredi tip karte';
 
   @override
@@ -636,10 +625,6 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get ticketTypeDialogActiveSwitch => 'Aktivan (dostupan za kupovinu)';
-
-  @override
-  String get validateTicketDialogSelectLiftRequired =>
-      'Odaberite ski lift na kojem se vrsi validacija.';
 
   @override
   String get validateTicketDialogTitle => 'Validacija karte';
@@ -792,10 +777,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String get incidentsActionReject => 'Odbij';
 
   @override
-  String get reportIncidentDialogSelectRequired =>
-      'Odaberite tip incidenta i lokaciju.';
-
-  @override
   String get reportIncidentDialogSuccess => 'Incident je prijavljen.';
 
   @override
@@ -870,10 +851,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String announcementsScreenExpiresLabel(String date) {
     return 'istice $date';
   }
-
-  @override
-  String get announcementFormDialogSelectRequired =>
-      'Odaberite kategoriju i skijaliste.';
 
   @override
   String get announcementFormDialogExpiryError =>
@@ -963,10 +940,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String partnerBenefitCountLabel(int count) {
     return '$count usluga';
   }
-
-  @override
-  String get benefitFormDialogSelectRequired =>
-      'Odaberite skijaliste i kategoriju.';
 
   @override
   String get benefitFormDialogEditTitle => 'Uredi uslugu';
@@ -1069,10 +1042,6 @@ class AppLocalizationsBs extends AppLocalizations {
   String referenceDataScreenRelatedCountLabel(int count) {
     return '$count povezano';
   }
-
-  @override
-  String get referenceItemFormDialogSelectCountryRequired =>
-      'Odaberite drzavu.';
 
   @override
   String referenceItemFormDialogEditTitle(String label) {
@@ -1197,4 +1166,19 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get reportsScreenNoPurchaseData => 'Nema podataka o kupovinama.';
+
+  @override
+  String selectFieldRequiredError(String field) {
+    return 'Odaberite $field.';
+  }
+
+  @override
+  String get removeImageConfirmTitle => 'Ukloniti sliku?';
+
+  @override
+  String get removeImageConfirmMessage =>
+      'Slika ce biti uklonjena. Ovu radnju mozete ponistiti samo ponovnim dodavanjem slike prije nego sacuvate izmjene.';
+
+  @override
+  String get removeImageAction => 'Ukloni sliku';
 }

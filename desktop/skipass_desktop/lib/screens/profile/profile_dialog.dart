@@ -87,6 +87,22 @@ class _ProfileDialogState extends State<ProfileDialog> {
     setState(() => _newImage = File(file.path));
   }
 
+  Future<void> _removeImage() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await AppFeedback.confirm(
+      context,
+      title: l10n.removeImageConfirmTitle,
+      message: l10n.removeImageConfirmMessage,
+      confirmLabel: l10n.removeImageAction,
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    setState(() {
+      _imageUrl = null;
+      _newImage = null;
+    });
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
@@ -172,10 +188,21 @@ class _ProfileDialogState extends State<ProfileDialog> {
                             : null,
                       ),
                       const SizedBox(width: AppSpacing.lg),
-                      OutlinedButton.icon(
-                        onPressed: _pickImage,
-                        icon: const Icon(Icons.upload_outlined, size: AppSizes.iconSm),
-                        label: Text(l10n.profileDialogChangePhoto),
+                      Wrap(
+                        spacing: AppSpacing.sm,
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: _pickImage,
+                            icon: const Icon(Icons.upload_outlined, size: AppSizes.iconSm),
+                            label: Text(l10n.profileDialogChangePhoto),
+                          ),
+                          if (_newImage != null || resolved.isNotEmpty)
+                            TextButton.icon(
+                              onPressed: _removeImage,
+                              icon: const Icon(Icons.delete_outline_rounded, size: AppSizes.iconSm),
+                              label: Text(l10n.commonRemove),
+                            ),
+                        ],
                       ),
                     ],
                   ),

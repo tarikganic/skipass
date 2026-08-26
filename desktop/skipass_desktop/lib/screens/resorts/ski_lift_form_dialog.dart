@@ -89,10 +89,6 @@ class _SkiLiftFormDialogState extends State<SkiLiftFormDialog> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_selectedResort == null || _selectedLiftType == null) {
-      AppFeedback.error(context, AppLocalizations.of(context)!.skiLiftFormDialogSelectRequired);
-      return;
-    }
 
     setState(() => _isSubmitting = true);
 
@@ -170,6 +166,7 @@ class _SkiLiftFormDialogState extends State<SkiLiftFormDialog> {
                           value: _selectedResort,
                           isRequired: true,
                           itemLabel: (r) => r.name,
+                          validator: (value) => value == null ? l10n.selectFieldRequiredError(l10n.commonResortLabel) : null,
                           onChanged: (value) => setState(() => _selectedResort = value),
                         ),
                       ),
@@ -181,6 +178,8 @@ class _SkiLiftFormDialogState extends State<SkiLiftFormDialog> {
                           value: _selectedLiftType,
                           isRequired: true,
                           itemLabel: (t) => t.name,
+                          validator: (value) =>
+                              value == null ? l10n.selectFieldRequiredError(l10n.skiLiftFormDialogLiftTypeLabel) : null,
                           onChanged: (value) => setState(() => _selectedLiftType = value),
                         ),
                       ),

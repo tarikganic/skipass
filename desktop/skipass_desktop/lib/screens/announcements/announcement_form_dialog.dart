@@ -106,13 +106,25 @@ class _AnnouncementFormDialogState extends State<AnnouncementFormDialog> {
     setState(() => _newImage = File(file.path));
   }
 
+  Future<void> _removeImage() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await AppFeedback.confirm(
+      context,
+      title: l10n.removeImageConfirmTitle,
+      message: l10n.removeImageConfirmMessage,
+      confirmLabel: l10n.removeImageAction,
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    setState(() {
+      _imageUrl = null;
+      _newImage = null;
+    });
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final l10n = AppLocalizations.of(context)!;
-    if (_selectedCategory == null || _selectedResort == null) {
-      AppFeedback.error(context, l10n.announcementFormDialogSelectRequired);
-      return;
-    }
     if (_expiresAt != null && !_expiresAt!.isAfter(_publishedAt)) {
       AppFeedback.error(context, l10n.announcementFormDialogExpiryError);
       return;
@@ -220,6 +232,8 @@ class _AnnouncementFormDialogState extends State<AnnouncementFormDialog> {
                           value: _selectedCategory,
                           isRequired: true,
                           itemLabel: (c) => c.name,
+                          validator: (value) =>
+                              value == null ? l10n.selectFieldRequiredError(l10n.announcementFormDialogCategoryLabel) : null,
                           onChanged: (value) => setState(() => _selectedCategory = value),
                         ),
                       ),
@@ -231,6 +245,7 @@ class _AnnouncementFormDialogState extends State<AnnouncementFormDialog> {
                           value: _selectedResort,
                           isRequired: true,
                           itemLabel: (r) => r.name,
+                          validator: (value) => value == null ? l10n.selectFieldRequiredError(l10n.commonResortLabel) : null,
                           onChanged: (value) => setState(() => _selectedResort = value),
                         ),
                       ),
@@ -271,7 +286,7 @@ class _AnnouncementFormDialogState extends State<AnnouncementFormDialog> {
                     onChanged: (value) => setState(() => _isActive = value),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  _ImagePreview(imageUrl: _imageUrl, newImage: _newImage, onPick: _pickImage),
+                  _ImagePreview(imageUrl: _imageUrl, newImage: _newImage, onPick: _pickImage, onRemove: _removeImage),
                 ],
               ),
             ),
@@ -280,11 +295,12 @@ class _AnnouncementFormDialogState extends State<AnnouncementFormDialog> {
 }
 
 class _ImagePreview extends StatelessWidget {
-  const _ImagePreview({required this.imageUrl, required this.newImage, required this.onPick});
+  const _ImagePreview({required this.imageUrl, required this.newImage, required this.onPick, required this.onRemove});
 
   final String? imageUrl;
   final File? newImage;
   final VoidCallback onPick;
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -308,10 +324,21 @@ class _ImagePreview extends StatelessWidget {
           child: hasImage ? null : const Icon(Icons.image_outlined, size: 28),
         ),
         const SizedBox(width: AppSpacing.lg),
-        OutlinedButton.icon(
-          onPressed: onPick,
-          icon: const Icon(Icons.upload_outlined, size: AppSizes.iconSm),
-          label: Text(hasImage ? l10n.profileDialogChangePhoto : l10n.reportIncidentDialogAddPhoto),
+        Wrap(
+          spacing: AppSpacing.sm,
+          children: [
+            OutlinedButton.icon(
+              onPressed: onPick,
+              icon: const Icon(Icons.upload_outlined, size: AppSizes.iconSm),
+              label: Text(hasImage ? l10n.profileDialogChangePhoto : l10n.reportIncidentDialogAddPhoto),
+            ),
+            if (hasImage)
+              TextButton.icon(
+                onPressed: onRemove,
+                icon: const Icon(Icons.delete_outline_rounded, size: AppSizes.iconSm),
+                label: Text(l10n.commonRemove),
+              ),
+          ],
         ),
       ],
     );

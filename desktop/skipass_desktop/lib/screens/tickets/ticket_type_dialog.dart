@@ -82,10 +82,6 @@ class _TicketTypeDialogState extends State<TicketTypeDialog> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_selectedResort == null) {
-      AppFeedback.error(context, AppLocalizations.of(context)!.ticketTypeDialogSelectResortRequired);
-      return;
-    }
 
     setState(() => _isSubmitting = true);
 
@@ -147,6 +143,7 @@ class _TicketTypeDialogState extends State<TicketTypeDialog> {
                     value: _selectedResort,
                     isRequired: true,
                     itemLabel: (r) => r.name,
+                    validator: (value) => value == null ? l10n.selectFieldRequiredError(l10n.commonResortLabel) : null,
                     onChanged: (value) => setState(() => _selectedResort = value),
                   ),
                   const SizedBox(height: AppSpacing.lg),

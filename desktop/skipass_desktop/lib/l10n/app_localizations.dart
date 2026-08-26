@@ -680,12 +680,6 @@ abstract class AppLocalizations {
   /// **'Odrzavanje'**
   String get liftMaintenanceButton;
 
-  /// No description provided for @skiLiftFormDialogSelectRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite skijaliste i tip lifta.'**
-  String get skiLiftFormDialogSelectRequired;
-
   /// No description provided for @skiLiftFormDialogEditTitle.
   ///
   /// In bs, this message translates to:
@@ -745,12 +739,6 @@ abstract class AppLocalizations {
   /// In bs, this message translates to:
   /// **'Lift je u pogonu'**
   String get skiLiftFormDialogOperationalSwitch;
-
-  /// No description provided for @trailFormDialogSelectRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite skijaliste i tezinu staze.'**
-  String get trailFormDialogSelectRequired;
 
   /// No description provided for @trailFormDialogEditTitle.
   ///
@@ -1214,12 +1202,6 @@ abstract class AppLocalizations {
   /// **'Povrat'**
   String get orderDetailRefundButton;
 
-  /// No description provided for @ticketTypeDialogSelectResortRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite skijaliste.'**
-  String get ticketTypeDialogSelectResortRequired;
-
   /// No description provided for @ticketTypeDialogEditTitle.
   ///
   /// In bs, this message translates to:
@@ -1267,12 +1249,6 @@ abstract class AppLocalizations {
   /// In bs, this message translates to:
   /// **'Aktivan (dostupan za kupovinu)'**
   String get ticketTypeDialogActiveSwitch;
-
-  /// No description provided for @validateTicketDialogSelectLiftRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite ski lift na kojem se vrsi validacija.'**
-  String get validateTicketDialogSelectLiftRequired;
 
   /// No description provided for @validateTicketDialogTitle.
   ///
@@ -1544,12 +1520,6 @@ abstract class AppLocalizations {
   /// **'Odbij'**
   String get incidentsActionReject;
 
-  /// No description provided for @reportIncidentDialogSelectRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite tip incidenta i lokaciju.'**
-  String get reportIncidentDialogSelectRequired;
-
   /// No description provided for @reportIncidentDialogSuccess.
   ///
   /// In bs, this message translates to:
@@ -1687,12 +1657,6 @@ abstract class AppLocalizations {
   /// In bs, this message translates to:
   /// **'istice {date}'**
   String announcementsScreenExpiresLabel(String date);
-
-  /// No description provided for @announcementFormDialogSelectRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite kategoriju i skijaliste.'**
-  String get announcementFormDialogSelectRequired;
 
   /// No description provided for @announcementFormDialogExpiryError.
   ///
@@ -1855,12 +1819,6 @@ abstract class AppLocalizations {
   /// In bs, this message translates to:
   /// **'{count} usluga'**
   String partnerBenefitCountLabel(int count);
-
-  /// No description provided for @benefitFormDialogSelectRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite skijaliste i kategoriju.'**
-  String get benefitFormDialogSelectRequired;
 
   /// No description provided for @benefitFormDialogEditTitle.
   ///
@@ -2041,12 +1999,6 @@ abstract class AppLocalizations {
   /// In bs, this message translates to:
   /// **'{count} povezano'**
   String referenceDataScreenRelatedCountLabel(int count);
-
-  /// No description provided for @referenceItemFormDialogSelectCountryRequired.
-  ///
-  /// In bs, this message translates to:
-  /// **'Odaberite drzavu.'**
-  String get referenceItemFormDialogSelectCountryRequired;
 
   /// No description provided for @referenceItemFormDialogEditTitle.
   ///
@@ -2257,6 +2209,30 @@ abstract class AppLocalizations {
   /// In bs, this message translates to:
   /// **'Nema podataka o kupovinama.'**
   String get reportsScreenNoPurchaseData;
+
+  /// No description provided for @selectFieldRequiredError.
+  ///
+  /// In bs, this message translates to:
+  /// **'Odaberite {field}.'**
+  String selectFieldRequiredError(String field);
+
+  /// No description provided for @removeImageConfirmTitle.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ukloniti sliku?'**
+  String get removeImageConfirmTitle;
+
+  /// No description provided for @removeImageConfirmMessage.
+  ///
+  /// In bs, this message translates to:
+  /// **'Slika ce biti uklonjena. Ovu radnju mozete ponistiti samo ponovnim dodavanjem slike prije nego sacuvate izmjene.'**
+  String get removeImageConfirmMessage;
+
+  /// No description provided for @removeImageAction.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ukloni sliku'**
+  String get removeImageAction;
 }
 
 class _AppLocalizationsDelegate

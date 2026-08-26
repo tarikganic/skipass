@@ -67,10 +67,6 @@ class _ValidateTicketDialogState extends State<ValidateTicketDialog> {
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_selectedLift == null) {
-      AppFeedback.error(context, AppLocalizations.of(context)!.validateTicketDialogSelectLiftRequired);
-      return;
-    }
 
     setState(() => _isSubmitting = true);
 
@@ -113,6 +109,8 @@ class _ValidateTicketDialogState extends State<ValidateTicketDialog> {
                     isRequired: true,
                     itemLabel: (lift) => lift.name,
                     emptyHint: l10n.validateTicketDialogNoLiftsAvailable,
+                    validator: (value) =>
+                        value == null ? l10n.selectFieldRequiredError(l10n.validateTicketDialogLiftLabel) : null,
                     onChanged: (value) => setState(() => _selectedLift = value),
                   ),
                   const SizedBox(height: AppSpacing.xl),
