@@ -150,10 +150,12 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Lista je klizna kako se placeholder ne bi prelio na nizim ekranima.
+    // shrinkWrap je obavezan jer se widget ponekad nalazi u sliver kontekstu
+    // (npr. SliverToBoxAdapter) koji djetetu daje neogranicenu visinu.
     return ListView.separated(
       padding: widget.padding,
       physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       itemCount: widget.count,
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
       itemBuilder: (context, index) => FadeTransition(
