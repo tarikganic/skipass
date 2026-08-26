@@ -43,7 +43,7 @@ public class SkiPassTicketService : ISkiPassTicketService
     {
         var query = BaseQuery().Where(t => !t.IsDeleted);
 
-        if (!_currentUserService.IsStaffOrAdmin)
+        if (!_currentUserService.IsAdmin)
         {
             var currentUserId = _currentUserService.GetRequiredUserId();
             query = query.Where(t => t.SkiPassOrder.UserId == currentUserId);
@@ -120,7 +120,10 @@ public class SkiPassTicketService : ISkiPassTicketService
             .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted, cancellationToken)
             ?? throw NotFoundException.For(EntityName, id);
 
-        _currentUserService.EnsureCanAccessUser(entity.SkiPassOrder.UserId);
+        if (!_currentUserService.IsAdmin && _currentUserService.GetRequiredUserId() != entity.SkiPassOrder.UserId)
+        {
+            throw new ForbiddenAccessException("Mozete pristupati samo vlastitim kartama.");
+        }
 
         return MapTicket(entity);
     }

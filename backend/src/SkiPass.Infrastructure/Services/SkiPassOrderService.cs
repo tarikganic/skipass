@@ -38,8 +38,9 @@ public class SkiPassOrderService : ISkiPassOrderService
     {
         var query = BaseQuery().Where(o => !o.IsDeleted);
 
-        // Skijas vidi iskljucivo vlastite narudzbe, bez obzira na poslani filter.
-        if (!_currentUserService.IsStaffOrAdmin)
+        // Skijas i osoblje vide iskljucivo vlastite narudzbe, bez obzira na poslani filter -
+        // uvid u tudje narudzbe (i karte unutar njih) ima samo administrator.
+        if (!_currentUserService.IsAdmin)
         {
             var currentUserId = _currentUserService.GetRequiredUserId();
             query = query.Where(o => o.UserId == currentUserId);
@@ -121,7 +122,10 @@ public class SkiPassOrderService : ISkiPassOrderService
             .FirstOrDefaultAsync(o => o.Id == id && !o.IsDeleted, cancellationToken)
             ?? throw NotFoundException.For(EntityName, id);
 
-        _currentUserService.EnsureCanAccessUser(entity.UserId);
+        if (!_currentUserService.IsAdmin && _currentUserService.GetRequiredUserId() != entity.UserId)
+        {
+            throw new ForbiddenAccessException("Mozete pristupati samo vlastitim narudzbama.");
+        }
 
         return MapDetails(entity);
     }
