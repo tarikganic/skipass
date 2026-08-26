@@ -34,7 +34,22 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+
+            // R8 (minifikacija) obara build jer stripe_android referencira klase iz
+            // opcionalnog "push provisioning" (Google Pay issuing) modula koji nije ni
+            // ukljucen u zavisnosti - te klase se ne koriste u aplikaciji.
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
+    }
+
+    lint {
+        // lintVitalAnalyzeRelease inace pokusava razrijesiti stripe_android's
+        // play-services-tapandpay tranzitivnu zavisnost, koja nije dostupna ni na
+        // jednom konfigurisanom Maven repozitoriju i time obara cijeli release build
+        // bez ikakve stvarne greske u kodu aplikacije.
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }
 
