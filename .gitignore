@@ -20,6 +20,9 @@ artifacts/
 .DS_Store
 Thumbs.db
 
+# Debug snimci koje flutter_zxing ispusti u working directory pri skeniranju
+*.pnm
+
 # Testni podaci mobilne aplikacije se namjerno cuvaju u repozitoriju
 # jer testovi provjeravaju prikaz nad stvarnim odgovorima API-ja.
 !mobile/skipass_mobile/test/fixtures/
