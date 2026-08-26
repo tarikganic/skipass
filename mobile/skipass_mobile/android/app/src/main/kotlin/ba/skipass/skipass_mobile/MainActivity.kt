@@ -1,5 +1,7 @@
 package ba.skipass.skipass_mobile
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+// FlutterFragmentActivity (ne FlutterActivity) je obavezan jer flutter_stripe
+// interno prikazuje PaymentSheet kao Android Fragment.
+class MainActivity : FlutterFragmentActivity()
