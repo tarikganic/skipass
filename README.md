@@ -7,9 +7,6 @@ Seminarski rad iz predmeta **Razvoj softvera II** - Fakultet informacijskih tehn
 SkiPass je sistem za digitalizaciju poslovanja ski centra. Sastoji se od REST API servisa,
 desktop aplikacije za osoblje i mobilne aplikacije za skijaše.
 
-> **Trenutni status: faza 4 - REST API, mobilna i desktop aplikacija, RabbitMQ worker servis i Stripe placanje.**
-> Sistem preporuke se implementira u narednoj fazi.
-
 ---
 
 ## Brzi start
