@@ -450,5 +450,7 @@
   "announcementDetailsAppBarTitle": "Obavijest",
   "announcementUrgentBadge": "Hitna obavijest",
   "announcementPublishedByLabel": "Objavio",
-  "announcementValidUntilLabel": "Vazi do"
+  "announcementValidUntilLabel": "Vazi do",
+  "removeImageConfirmTitle": "Ukloniti sliku?",
+  "removeImageConfirmMessage": "Slika ce biti uklonjena. Ovu radnju mozete ponistiti samo ponovnim dodavanjem slike prije nego sacuvate izmjene."
 }

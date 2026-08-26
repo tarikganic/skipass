@@ -130,6 +130,19 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
     }
   }
 
+  Future<void> _removePhoto() async {
+    final t = AppLocalizations.of(context)!;
+    final confirmed = await AppFeedback.confirm(
+      context,
+      title: t.removeImageConfirmTitle,
+      message: t.removeImageConfirmMessage,
+      confirmLabel: t.removePhotoAction,
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    setState(() => _photo = null);
+  }
+
   Future<void> _submit() async {
     final t = AppLocalizations.of(context)!;
     if (!(_formKey.currentState?.validate() ?? false)) return;
@@ -331,7 +344,7 @@ class _ReportIncidentScreenState extends State<ReportIncidentScreen> {
           _PhotoPicker(
             photo: _photo,
             onPick: _pickPhoto,
-            onRemove: () => setState(() => _photo = null),
+            onRemove: _removePhoto,
           ),
           const SizedBox(height: AppSpacing.xxl),
 

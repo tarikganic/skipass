@@ -2425,6 +2425,18 @@ abstract class AppLocalizations {
   /// In bs, this message translates to:
   /// **'Vazi do'**
   String get announcementValidUntilLabel;
+
+  /// No description provided for @removeImageConfirmTitle.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ukloniti sliku?'**
+  String get removeImageConfirmTitle;
+
+  /// No description provided for @removeImageConfirmMessage.
+  ///
+  /// In bs, this message translates to:
+  /// **'Slika ce biti uklonjena. Ovu radnju mozete ponistiti samo ponovnim dodavanjem slike prije nego sacuvate izmjene.'**
+  String get removeImageConfirmMessage;
 }
 
 class _AppLocalizationsDelegate

@@ -419,5 +419,7 @@
   "announcementDetailsAppBarTitle": "Announcement",
   "announcementUrgentBadge": "Urgent announcement",
   "announcementPublishedByLabel": "Published by",
-  "announcementValidUntilLabel": "Valid until"
+  "announcementValidUntilLabel": "Valid until",
+  "removeImageConfirmTitle": "Remove image?",
+  "removeImageConfirmMessage": "The image will be removed. You can undo this only by adding an image again before saving your changes."
 }

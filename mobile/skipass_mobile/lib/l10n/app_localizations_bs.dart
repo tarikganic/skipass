@@ -1295,4 +1295,11 @@ class AppLocalizationsBs extends AppLocalizations {
 
   @override
   String get announcementValidUntilLabel => 'Vazi do';
+
+  @override
+  String get removeImageConfirmTitle => 'Ukloniti sliku?';
+
+  @override
+  String get removeImageConfirmMessage =>
+      'Slika ce biti uklonjena. Ovu radnju mozete ponistiti samo ponovnim dodavanjem slike prije nego sacuvate izmjene.';
 }

@@ -1301,4 +1301,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get announcementValidUntilLabel => 'Valid until';
+
+  @override
+  String get removeImageConfirmTitle => 'Remove image?';
+
+  @override
+  String get removeImageConfirmMessage =>
+      'The image will be removed. You can undo this only by adding an image again before saving your changes.';
 }

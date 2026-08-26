@@ -122,6 +122,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  Future<void> _removePhoto() async {
+    final t = AppLocalizations.of(context)!;
+    final confirmed = await AppFeedback.confirm(
+      context,
+      title: t.removeImageConfirmTitle,
+      message: t.removeImageConfirmMessage,
+      confirmLabel: t.removePhotoAction,
+      isDestructive: true,
+    );
+    if (!confirmed || !mounted) return;
+    setState(() {
+      _newPhoto = null;
+      _currentImageUrl = null;
+    });
+  }
+
   Future<void> _submit() async {
     setState(_serverErrors.clear);
 
@@ -207,10 +223,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               currentImageUrl: _currentImageUrl,
               initials: context.read<AuthProvider>().user?.initials ?? '?',
               onPick: _pickPhoto,
-              onRemove: () => setState(() {
-                _newPhoto = null;
-                _currentImageUrl = null;
-              }),
+              onRemove: _removePhoto,
             ),
           ),
           const SizedBox(height: AppSpacing.xxl),
