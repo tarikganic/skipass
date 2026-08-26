@@ -349,7 +349,11 @@ public class PaymentService : IPaymentService
         Event stripeEvent;
         try
         {
-            stripeEvent = EventUtility.ConstructEvent(jsonPayload, stripeSignatureHeader, webhookSecret);
+            // throwOnApiVersionMismatch: false - Stripe nalog salje dogadjaje u svojoj trenutnoj
+            // API verziji, koja moze biti novija od one koju ocekuje instalirana Stripe.net biblioteka;
+            // ovdje se koriste samo osnovna polja (Id, Status), pa manja razlika u verziji nije problem,
+            // a bez ovoga bi ConstructEvent bacio izuzetak i webhook zauvijek vracao 400.
+            stripeEvent = EventUtility.ConstructEvent(jsonPayload, stripeSignatureHeader, webhookSecret, throwOnApiVersionMismatch: false);
         }
         catch (StripeException ex)
         {
