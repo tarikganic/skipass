@@ -14,9 +14,11 @@ desktop aplikacije za osoblje i mobilne aplikacije za skijaše.
 
 ## Sadržaj
 
+- [Brzi start](#brzi-start)
 - [Arhitektura](#arhitektura)
 - [Model baze podataka](#model-baze-podataka)
 - [Pokretanje aplikacije](#pokretanje-aplikacije)
+- [Vanjski servisi](#vanjski-servisi)
 - [RabbitMQ worker servis](#rabbitmq-worker-servis)
 - [Placanje (Stripe)](#placanje-stripe)
 - [Mobilna aplikacija](#mobilna-aplikacija)
@@ -24,6 +26,45 @@ desktop aplikacije za osoblje i mobilne aplikacije za skijaše.
 - [Korisnički podaci za pristup](#korisnički-podaci-za-pristup)
 - [Pregled API endpointa](#pregled-api-endpointa)
 - [Implementirana pravila](#implementirana-pravila)
+
+---
+
+## Brzi start
+
+Kompletan redoslijed za pokretanje cijelog sistema od nule, bez prethodnog konteksta o projektu:
+
+1. **Preduslovi** - instalirati .NET SDK 10, Docker Desktop (ili lokalni SQL Server), Flutter
+   3.47+ i kreirati besplatan Stripe test nalog. Detalji: [Preduslovi](#preduslovi).
+2. **Konfiguracija** - `cp .env.example .env`, pa popuniti `JWT_KEY`, `DB_PASSWORD`,
+   `STRIPE_SECRET_KEY` i `STRIPE_WEBHOOK_SECRET`. Detalji: [Konfiguracija](#1-konfiguracija)
+   i [Plaćanje (Stripe)](#placanje-stripe).
+3. **Pokretanje backend-a** - iz korijena repozitorija:
+   ```bash
+   docker compose up --build
+   ```
+   Ovim se podižu SQL Server, RabbitMQ, API (`http://localhost:5000`, Swagger na `/swagger`)
+   i Worker servis - sve u jednoj Docker mreži, bez ijednog dodatnog ručnog koraka. Baza,
+   migracije i seed podaci se kreiraju automatski pri prvom pokretanju API-ja.
+4. **Mobilna aplikacija** (skijaš) - iz `mobile/skipass_mobile`:
+   ```bash
+   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:5000
+   ```
+   Detalji i build APK-a: [Mobilna aplikacija](#mobilna-aplikacija).
+5. **Desktop aplikacija** (osoblje/administrator) - iz `desktop/skipass_desktop`:
+   ```bash
+   flutter run -d windows
+   ```
+   Adresa API-ja je već `localhost` po defaultu. Detalji i build EXE-a:
+   [Desktop aplikacija](#desktop-aplikacija).
+6. **Prijava** - bilo kojim nalogom iz [Korisnički podaci za pristup](#korisnički-podaci-za-pristup)
+   (sve lozinke su `test`).
+
+Nijedan korak ne zahtijeva ručno kreiranje baze, pokretanje SQL skripti niti ručnu
+registraciju korisnika. Jedine dvije stvarne veze prema internetu koje sistem ostvaruje
+su Stripe (obavezan sandbox za plaćanje, po specifikaciji zadatka) i opciono SMTP
+(Mailtrap sandbox za e-mailove iz Worker servisa) - detaljno objašnjeno u
+[Vanjski servisi](#vanjski-servisi). Sve ostalo (API, baza, RabbitMQ, oba klijenta)
+radi isključivo unutar `localhost`/Docker mreže.
 
 ---
 
@@ -182,6 +223,28 @@ procesa i pokreću se odvojenim komandama, isto kao u Docker-u.
 ```bash
 dotnet dotnet-ef migrations add NazivMigracije --project backend/src/SkiPass.Infrastructure --startup-project backend/src/SkiPass.API
 ```
+
+---
+
+## Vanjski servisi
+
+Sistem radi u potpunosti lokalno (Docker mreža `skipass-network` kada se pokreće preko
+`docker compose`); jedine dvije stvarne veze prema internetu su:
+
+- **Stripe** (`api.stripe.com`) - test/sandbox nalog. Obavezan je po specifikaciji zadatka
+  (integracija plaćanja mora ići preko stvarnog sandbox okruženja, ne smije biti
+  simulirana) - koriste ga backend (`PaymentService`) i mobilna aplikacija
+  (`flutter_stripe` PaymentSheet). Nikad se ne kontaktira produkcijski Stripe nalog.
+- **SMTP (Mailtrap sandbox)** - koristi isključivo `SkiPass.Worker` za slanje e-mailova
+  iz sistemskih notifikacija; potpuno je opciono i izolovano od ostatka sistema - ako SMTP
+  podaci nisu podešeni u `.env`, Worker se i dalje normalno pokreće i konzumira RabbitMQ
+  red, samo pojedinačno slanje e-maila neuspije uz jasnu grešku u logu. E-mailovi
+  zavrsavaju u Mailtrap test inboxu, nikad ne stižu stvarnim primaocima.
+
+Nema nikakvih drugih vanjskih poziva - bez telemetrije, analitike, licencnih provjera,
+mapa ili vremenskih API-ja i slično (podaci o vremenskim uslovima su statični seed
+podaci, ne dohvaćaju se uživo). API, baza, RabbitMQ i oba klijenta (mobilni i desktop)
+međusobno komuniciraju isključivo preko `localhost`/Docker mreže.
 
 ---
 
@@ -388,6 +451,9 @@ a podrazumijevana vrijednost je `test`.
 | Osoblje skijališta | `osoblje2` | `test` | Staff |
 | Dodatni skijaš | `mobile2` | `test` | Skier |
 | Dodatni skijaš | `mobile3` | `test` | Skier |
+
+Dodatno postoje demo skijaši `mobile4`-`mobile7` (lozinka `test`) sa bogatijom historijom
+narudžbi, karata i recenzija - radi realističnijeg prikaza pri prezentaciji.
 
 **Prijava:**
 
